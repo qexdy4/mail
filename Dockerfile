@@ -7,6 +7,8 @@ COPY . /var/www/html
 # Устанавливаем рабочую директорию
 WORKDIR /var/www/html
 
+RUN a2enmod rewrite
+
 # Переменная PORT задается Render
 ENV PORT 10000
 EXPOSE $PORT
