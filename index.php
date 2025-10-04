@@ -152,6 +152,6 @@ if (empty($_SERVER['QUERY_STRING'])) {
         </div>
       </footer>
     </div>
-    <script src="/js/bundle.min.js"></script>
+    <script src="/dist/bundle.min.js"></script>
   </body>
 </html>
