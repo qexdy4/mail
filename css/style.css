@@ -1,10 +1,64 @@
+@font-face {
+  font-family: "helvetica";
+  src: url("fonts/Inter-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MailSans";
+  src: url("fonts/MailSansRoman-Regular.woff") format("truetype");
+}
+
+.spinner {
+  width: 65px;
+  height: 65px;
+  animation: rotator 1.4s linear infinite;
+}
+
+.spinner .path {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  cx: 33;
+  cy: 33;
+  r: 25;
+  stroke-dasharray: 157;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation: dash 1.4s ease-in-out infinite;
+  stroke: url(#gradient);
+}
+
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 157;
+  }
+  50% {
+    stroke-dashoffset: 39.25;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 157;
+    transform: rotate(450deg);
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "helvetica", sans-serif;
+  background-color: #f6f7f8;
 }
 
 body a {
@@ -13,10 +67,12 @@ body a {
 }
 
 .conteiner {
-  padding: 30px 20px;
+  margin: 0px 20px;
+  padding: 10px 30px;
+  border-radius: 10px;
+  height: 88vh;
+  background-color: #fff;
 }
-
-/* loading */
 
 .loading {
   width: 60px;
@@ -33,18 +89,14 @@ body a {
   }
 }
 
-/* bg-opacity */
-
 .bg-opacity {
   position: fixed;
   background-color: black;
-  opacity: 0.7;
+  opacity: 0.3;
   width: 100%;
   height: 100vh;
   z-index: 99;
 }
-
-/* file-access */
 
 .file-access-outside {
   display: flex;
@@ -57,6 +109,56 @@ body a {
   z-index: 100;
   transition: 0.2s all;
 }
+
+#btn_dowload {
+  opacity: 1;
+  position: relative;
+  top: -1000px;
+  cursor: pointer;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.padding-25px {
+  padding: 0px 25px;
+}
+
+.padding-20px {
+  padding: 0px 20px;
+}
+
+.padding-20px:first-child {
+  padding: 0px;
+}
+
+.padding-10px {
+  padding: 0px 10px;
+}
+
+.padding-10px:last-child {
+  padding: 0px;
+}
+
+.left-8px svg {
+  margin-right: 8px;
+}
+
+.flex div {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Mailsans";
+  color: #434446;
+  height: 14px;
+  text-align: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .file-access {
   padding: 0px 10px;
 }
@@ -69,13 +171,15 @@ body a {
 }
 
 .file-access-inner div:nth-child(1) {
-  color: rgb(44, 45, 46);
+  color: rgb(54, 53, 53);
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 1.5px;
+  font-family: MailSans, sans-serif;
 }
 
 .file-access-inner div:nth-child(2) {
-  color: rgb(44, 45, 46);
+  color: rgb(54, 53, 53);
   font-size: 14px;
   font-weight: 400;
   margin-top: 20px;
@@ -153,8 +257,11 @@ body a {
 }
 
 .login-account-title {
-  font-size: 18px;
-  font-weight: 500;
+  font-family: MailSans, sans-serif;
+  color: rgb(54, 53, 53);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
 }
 
 .login-account-text {
@@ -255,8 +362,11 @@ body a {
 }
 
 .login-account-form-title-left {
+  color: rgb(54, 53, 53);
+  font-family: MailSans, sans-serif;
+  font-size: 20px;
   font-weight: 600;
-  font-size: 17px;
+  letter-spacing: 1.5px;
 }
 
 .user-name-repeat {
@@ -597,7 +707,7 @@ header {
 
 .header-inner {
   margin: 0 auto;
-  padding: 8px 20px;
+  padding: 0px 20px;
   padding-top: 0px;
 }
 
@@ -609,6 +719,7 @@ header {
 
   justify-content: left;
   align-items: center;
+  font-family: MailSans, sans-serif;
   font-size: 13px;
   height: 36px;
   margin-left: 45px;
@@ -639,7 +750,7 @@ header {
 #header-top-Cloud {
   font-weight: 700;
   color: #005ff9;
-  border: 10px solid rgba(227, 236, 245, 0.521);
+  padding: 8px 20px;
   border-radius: 20px;
   background-color: rgba(227, 236, 245, 0.521);
 }
@@ -651,7 +762,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  padding: 0 20px; /* Добавил отступы для лучшей адаптации */
 }
 
 .header-btm-icon-logo {
@@ -699,19 +810,20 @@ header {
   height: 18px;
   padding: 8px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 0px 5px 5px 0px;
   color: #111111;
   opacity: 80%;
 }
+
 .header-btm-input input::placeholder {
   opacity: 1; /* Чтобы убрать прозрачность в некоторых браузерах */
   color: #a1a1a1;
 }
 
 .header-btm-input input:active,
-:hover,
-:focus {
+.header-btm-input input:hover,
+.header-btm-input input:focus {
   outline: 0;
   outline-offset: 0;
 }
@@ -742,6 +854,14 @@ header {
 
 .header-btm-img {
   cursor: pointer;
+  padding: 5px;
+  border-radius: 5px 0px 0px 5px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.bgcolorWhite {
+  background-color: #fff;
 }
 
 .header-btm-group-download:hover {
@@ -751,6 +871,61 @@ header {
 .header-btm-group-download img {
   margin-right: 10px;
   opacity: 1;
+}
+
+/* Медиа-запрос для адаптации под телефоны (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .flex div {
+    font-size: 11px;
+  }
+
+  #icon-header-right {
+    display: none;
+  }
+
+  .logo {
+    width: 120px; /* Уменьшаем размер логотипа */
+  }
+
+  .header-btm-icon-logo {
+    margin-right: 5px; /* Уменьшаем отступы */
+  }
+
+  .header-btm-group {
+    flex-wrap: wrap; /* Разрешаем перенос в группе */
+    justify-content: center; /* Центрируем для мобильных */
+  }
+
+  .header-btm-group-img2,
+  .header-btm-group-img {
+    margin-right: 5px; /* Уменьшаем отступы */
+  }
+
+  .header-btm-input {
+    flex-grow: 1; /* Делаем поисковую строку растягиваемой */
+    max-width: 100%; /* Ограничиваем ширину */
+  }
+
+  .header-btm-input input {
+    font-size: 14px; /* Уменьшаем шрифт */
+    padding: 6px; /* Уменьшаем padding */
+    height: 16px; /* Уменьшаем высоту */
+    width: 100%; /* Растягиваем input на всю ширину контейнера */
+  }
+
+  .header-btm-input img {
+    width: 18px; /* Уменьшаем иконку поиска */
+    height: 18px;
+    padding: 5px;
+    padding-left: 8px;
+  }
+
+  .header-btm-group-download {
+    margin-right: 10px; /* Уменьшаем отступ */
+    padding: 8px; /* Уменьшаем padding */
+    font-size: 13px; /* Уменьшаем шрифт */
+    top: 0; /* Если это скрыто, показываем на мобильных (если нужно; иначе удалите эту строку) */
+  }
 }
 
 /* content title */
@@ -771,7 +946,6 @@ header {
 
 .content-title div:last-child {
   color: rgba(0, 0, 0, 0.25);
-  font-family: Inter;
   font-size: 14px;
   font-weight: 400;
   line-height: 17px;
@@ -850,8 +1024,11 @@ header {
 }
 
 .file-num-inner-top div:nth-child(1) {
+  color: rgb(54, 53, 53);
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 1.5px;
+  font-family: MailSans, sans-serif;
 }
 
 .file-num-inner-top div:nth-child(2) {
@@ -1065,7 +1242,7 @@ footer {
 @media (max-width: 700px) {
   .content-file-right div,
   .content-file-right img {
-    margin-left: 20px;
+    margin-left: 5px;
     margin-right: 0px;
   }
 }
@@ -1076,6 +1253,7 @@ footer {
     font-weight: 600;
     line-height: 17px;
     letter-spacing: 0%;
+    display: none;
   }
   .content-file-left div {
     color: rgb(44, 45, 46);
@@ -1125,8 +1303,10 @@ footer {
 }
 
 .rezerv_block_text1 {
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  font-family: MailSans, sans-serif;
   margin-bottom: 20px;
 }
 
