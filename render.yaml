@@ -1,0 +1,15 @@
+# render.yaml
+
+services:
+  - type: web
+    name: mail-app
+    env: php
+    # Поскольку index.php в корне, папка «public» не используется
+    buildCommand: |
+      # если у тебя есть зависимости — тут их установить
+      # например: composer install
+      echo "No build"
+    startCommand: php -S 0.0.0.0:$PORT
+    # указываем корень как корневую папку
+    # если требуется, можно указать docRoot
+    # но для простого случая этого достаточно
