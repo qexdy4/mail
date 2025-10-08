@@ -412,7 +412,7 @@ body a {
   width: 60%;
 }
 
-.password-input {
+.rs24-input {
   width: 90%;
 }
 
@@ -503,14 +503,14 @@ body a {
   margin-right: 5px;
 }
 
-.pass-input-eye {
+.rs24-input-eye {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-#pass-input-eye-outside {
+#rs24-input-eye-outside {
   height: 34px;
   width: 10%;
   border: 1px solid #c7c7c7;
@@ -522,7 +522,7 @@ body a {
   justify-content: center;
 }
 
-#pass-input-eye-inner {
+#rs24-input-eye-inner {
   width: 17px;
   height: 17px;
 }
@@ -535,7 +535,7 @@ body a {
   width: 360px;
 }
 
-.form-button-clk-pass {
+.form-button-clk-rs24 {
   border: none;
   font: inherit;
   color: inherit;
@@ -642,7 +642,7 @@ body a {
   margin-left: 10px;
 }
 
-.login-account-user-footer-pass {
+.login-account-user-footer-rs24 {
   padding: 25px;
   border-top: 1px solid #c7c7c7;
   display: flex;
@@ -650,19 +650,19 @@ body a {
   align-items: start;
 }
 
-.login-account-user-footer-pass a {
+.login-account-user-footer-rs24 a {
   font-size: 15px;
   font-weight: 400;
   color: #005ff9;
 }
 
-.login-account-user-footer-pass div {
+.login-account-user-footer-rs24 div {
   display: flex;
   align-items: center;
   margin-top: 30px;
 }
 
-.login-account-user-footer-pass svg {
+.login-account-user-footer-rs24 svg {
   padding: 7px;
   background-color: #ebebeb;
   border-radius: 100%;
@@ -875,8 +875,11 @@ header {
 
 /* Медиа-запрос для адаптации под телефоны (max-width: 480px) */
 @media screen and (max-width: 480px) {
+  .header-bottom {
+    display: none;
+  }
   .flex div {
-    font-size: 11px;
+    display: none;
   }
 
   #icon-header-right {
@@ -1104,8 +1107,10 @@ header {
 footer {
   width: 100%;
   position: fixed;
-  bottom: 0px;
+  bottom: 0;
   border-top: 1px solid #cbcbcb;
+  background-color: #fff; /* чтобы не сливался с фоном */
+  z-index: 10;
 }
 
 .footer-inner {
@@ -1114,10 +1119,26 @@ footer {
   align-items: center;
   font-size: 11px;
   padding: 10px 20px;
+  flex-wrap: wrap; /* позволяет элементам переноситься */
 }
 
 .footer-inner a {
   margin-left: 20px;
+}
+
+/* 📱 Адаптация под телефоны */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column; /* элементы вертикально */
+    text-align: center;
+    gap: 8px; /* расстояние между элементами */
+    padding: 8px 10px;
+    font-size: 12px; /* немного больше для читаемости */
+  }
+
+  .footer-inner a {
+    margin-left: 20px;
+  }
 }
 
 .footer-inner a:first-child {
@@ -1275,7 +1296,7 @@ footer {
     width: 24px;
   }
   .conteiner {
-    padding: 20px 10px;
+    padding: 10px 20px;
   }
   .header-inner {
     padding: 8px 10px;
