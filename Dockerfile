@@ -39,6 +39,7 @@ RUN adduser --disabled-password --gecos "" botuser \
 USER botuser
 
 # -----------------------------
-# Запуск бота (exec form)
+# Запуск через gunicorn (подходит для Render)
+# Используем sh -c чтобы расширить переменную $PORT
 # -----------------------------
-CMD ["python", "-u", "bot.py"]
+CMD ["sh", "-lc", "gunicorn bot:app -b 0.0.0.0:${PORT:-10000} -w 1"]
