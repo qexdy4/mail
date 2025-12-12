@@ -1,0 +1,10 @@
+services:
+  tgbot:
+    build: .
+    image: tg-bot-downloader:latest
+    container_name: tg_bot
+    env_file:
+      - .env
+    volumes:
+      - ./downloads:/app/downloads
+    restart: unless-stopped 
