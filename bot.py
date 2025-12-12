@@ -6,6 +6,7 @@ import concurrent.futures
 import logging
 from telebot import TeleBot, types
 from dotenv import load_dotenv
+from flask import Flask, request, abort
 from urllib.parse import urlparse
 from threading import Lock
 import re
@@ -583,5 +584,67 @@ def handle_my_chat_member(msg):
         logging.error(f"Ошибка в handle_my_chat_member: {e}")
 
 # -----------------------------
-logging.info("Бот запущен")
-bot.polling(none_stop=True, allowed_updates=["message", "callback_query"])
+# Webhook (Flask) app to support hosting on platforms without shell access (e.g., Render free)
+app = Flask(__name__)
+
+
+# Healthcheck
+@app.route("/", methods=["GET"])
+def index():
+    return "OK"
+
+
+# Telegram webhook endpoint (path is configurable via WEBHOOK_PATH)
+WEBHOOK_BASE = os.environ.get("WEBHOOK_URL") or os.environ.get("RENDER_EXTERNAL_URL")
+WEBHOOK_PATH = os.environ.get("WEBHOOK_PATH") or f"/webhook/{os.environ.get('WEBHOOK_TOKEN') or BOT_TOKEN[-20:]}"
+
+
+@app.route(WEBHOOK_PATH, methods=["POST"])
+def telegram_webhook():
+    if request.headers.get('content-type') != 'application/json':
+        abort(400)
+    try:
+        update = types.Update.de_json(request.stream.read().decode('utf-8'))
+        bot.process_new_updates([update])
+    except Exception as e:
+        logging.error(f"Ошибка при обработке webhook update: {e}")
+        abort(500)
+    return "", 200
+
+
+# При старте модуля — если задан WEBHOOK_BASE, регистрируем webhook у Telegram
+if WEBHOOK_BASE:
+    full_url = WEBHOOK_BASE.rstrip("/") + WEBHOOK_PATH
+    try:
+        bot.remove_webhook()
+    except Exception:
+        pass
+
+    try:
+        ok = bot.set_webhook(full_url, allowed_updates=["message", "callback_query", "my_chat_member"])
+        if ok:
+            logging.info(f"Webhook установлен: {full_url}")
+        else:
+            logging.error(f"Не удалось установить webhook: {full_url}")
+    except Exception as e:
+        logging.error(f"Ошибка при установке webhook: {e}")
+else:
+    logging.warning("WEBHOOK_URL/RENDER_EXTERNAL_URL не задан — бот будет работать через polling (не рекомендуется для Render)")
+
+
+if __name__ == '__main__':
+    # Если запускаем скрипт напрямую (локальная разработка), хотим автоматически стартовать
+    # В режиме webhook (если задан WEBHOOK_BASE) запускаем встроенный Flask сервер
+    if WEBHOOK_BASE:
+        port = int(os.environ.get('PORT', 5000))
+        logging.info(f"Запускаю Flask dev-server на 0.0.0.0:{port} (WEBHOOK_MODE)")
+        app.run(host='0.0.0.0', port=port)
+    else:
+        # По умолчанию — polling для локальной разработки (автозапуск без интерактивности)
+        logging.info("WEBHOOK не настроен — запускаю polling (локальный режим)")
+        try:
+            bot.polling(none_stop=True, allowed_updates=["message", "callback_query", "my_chat_member"])
+        except KeyboardInterrupt:
+            logging.info("Остановка по сигналу KeyboardInterrupt")
+        except Exception as e:
+            logging.error(f"Ошибка при polling: {e}")
