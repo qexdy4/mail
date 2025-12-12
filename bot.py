@@ -87,22 +87,24 @@ def get_video_info(url: str):
         "--ignore-config",
         "--age-limit", "99",
         "--extractor-args", "youtube:skip=hls,dash",
-        "--flat-playlist",
         "--quiet",                    
         url
     ]
 
     try:
+        # Capture stderr to get detailed error info for diagnostics (useful on Render)
         result = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,  
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=30
+            timeout=60
         )
 
         if result.returncode != 0:
-            logging.error(f"yt-dlp вернул ошибку для {url}")
+            # Log stderr for debugging (cut to reasonable length)
+            err = (result.stderr or "").strip()
+            logging.error(f"yt-dlp вернул ошибку для {url}: {err[:1000]}")
             return None
 
         json_str = result.stdout.strip()
