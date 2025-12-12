@@ -31,6 +31,23 @@ if not BOT_TOKEN:
 
 bot = TeleBot(BOT_TOKEN)
 
+# Опции для обхода защиты YouTube, если видео требует входа (captcha / "not a bot")
+YT_COOKIES_FILE = os.getenv("YT_COOKIES_FILE")  # путь к cookies.txt
+YT_COOKIES_FROM_BROWSER = os.getenv("YT_COOKIES_FROM_BROWSER")  # e.g. 'chrome' or 'firefox'
+YT_COOKIES_CONTENT = os.getenv("YT_COOKIES_CONTENT")  # если cookie передаются содержимым (Render secret)
+
+# Если задано содержимое cookies через переменную (удобно для Render), запишем его в файл
+if YT_COOKIES_CONTENT and not YT_COOKIES_FILE:
+    try:
+        tmp_path = "/tmp/yt_cookies.txt"
+        with open(tmp_path, "w") as f:
+            f.write(YT_COOKIES_CONTENT)
+        os.chmod(tmp_path, 0o600)
+        YT_COOKIES_FILE = tmp_path
+        logging.info("YT_COOKIES_CONTENT записан в /tmp/yt_cookies.txt и будет использоваться yt-dlp")
+    except Exception as e:
+        logging.error(f"Не удалось записать YT_COOKIES_CONTENT в файл: {e}")
+
 DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -91,6 +108,12 @@ def get_video_info(url: str):
         url
     ]
 
+    # Добавляем опции cookies, если администратор настроил их через окружение
+    if YT_COOKIES_FROM_BROWSER:
+        cmd.extend(["--cookies-from-browser", YT_COOKIES_FROM_BROWSER])
+    elif YT_COOKIES_FILE:
+        cmd.extend(["--cookies", YT_COOKIES_FILE])
+
     try:
         # Capture stderr to get detailed error info for diagnostics (useful on Render)
         result = subprocess.run(
@@ -105,6 +128,9 @@ def get_video_info(url: str):
             # Log stderr for debugging (cut to reasonable length)
             err = (result.stderr or "").strip()
             logging.error(f"yt-dlp вернул ошибку для {url}: {err[:1000]}")
+            # Если ошибка явно говорит о необходимости cookies — возвращаем специальный маркер
+            if "Sign in to confirm" in err or "Use --cookies-from-browser" in err or ("cookies" in err.lower() and "youtube" in err.lower()):
+                return {"needs_cookies": True, "message": err}
             return None
 
         json_str = result.stdout.strip()
@@ -344,6 +370,11 @@ def download_video(url: str, resolution: int):
         "--merge-output-format", "mp4",
         url
     ]
+    # cookies support
+    if YT_COOKIES_FROM_BROWSER:
+        cmd.extend(["--cookies-from-browser", YT_COOKIES_FROM_BROWSER])
+    elif YT_COOKIES_FILE:
+        cmd.extend(["--cookies", YT_COOKIES_FILE])
     try:
         logging.info(f"Скачивание {resolution}p: {url}")
         subprocess.run(cmd, check=True, timeout=300)
@@ -379,6 +410,13 @@ def ask_quality_thread(chat_id, url, user_id):
     info = get_video_info(url)
     if not info:
         bot.send_message(chat_id, "⚠️ Не удалось получить информацию о видео. Проверьте ссылку и попробуйте снова.")
+        with lock:
+            active_users.pop(user_id, None)
+        return
+
+    # Если yt-dlp вернул маркер, что нужны cookies — уведомим пользователя и админа
+    if isinstance(info, dict) and info.get("needs_cookies"):
+        bot.send_message(chat_id, "⚠️ Это видео требует входа в YouTube (captcha/anti-bot). Администратор бота должен настроить cookies для yt-dlp. Инструкция: https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp")
         with lock:
             active_users.pop(user_id, None)
         return
